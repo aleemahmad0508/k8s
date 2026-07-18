@@ -9,7 +9,7 @@ spec:
     storage: 5Gi
 
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
 
   persistentVolumeReclaimPolicy: Retain
 
