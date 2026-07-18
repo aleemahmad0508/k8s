@@ -1,0 +1,55 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+
+metadata:
+  name: wordpress-network-policy
+  namespace: wordpress
+
+spec:
+  podSelector:
+    matchLabels:
+      app: wordpress
+
+  policyTypes:
+    - Ingress
+    - Egress
+
+  ###################################################
+  # INGRESS RULES
+  ###################################################
+
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 80
+
+  ###################################################
+  # EGRESS RULES
+  ###################################################
+
+  egress:
+
+    # Allow DNS (CoreDNS)
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+
+    # Allow EFS (NFS)
+    - ports:
+        - protocol: TCP
+          port: 2049
+
+    # Allow MySQL (Amazon RDS)
+    - ports:
+        - protocol: TCP
+          port: 3306
