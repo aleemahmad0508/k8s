@@ -24,6 +24,11 @@ spec:
       - name: wordpress
         image: wordpress:latest
 
+        volumeMounts:
+           - name: wordpress-storage
+             mountPath: /var/www/html
+      
+
         ports:
         - containerPort: 80
 
@@ -56,3 +61,7 @@ spec:
             port: 80
           initialDelaySeconds: 30
           periodSeconds: 10
+      volumes:
+        - name: wordpress-storage
+          persistentVolumeClaim:
+           claimName: wordpress-pvc
